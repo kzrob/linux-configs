@@ -29,6 +29,8 @@ in
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     }))
     libnotify
+    zsh
+    oh-my-zsh
     kitty # terminal
     hyprpaper # wallpaper
     mako # notifications
@@ -37,18 +39,25 @@ in
 
     # Development tools
     # vscode-fhs TODO: WHY THE FUCK IS THIS MARKED UNFREE!?
-    pkgs.arduino-ide
+    arduino-ide
 
     # Learning
-    pkgs.anki
+    anki
 
     # Media
-    pkgs.mpv
-    pkgs.obs-studio
+    mpv
+    obs-studio
 
     # Gaming
     #TODO: import (fetchTarball prism)
   ];
+
+  # TODO: I think this is where we do dotfile configs through nix 
+  programs.zsh.enable = true;
+  programs.zsh.oh-my-zsh = {
+    enable = true;
+    theme = "bureau";
+  };
 
   programs.git = {
     enable = true;
