@@ -30,8 +30,16 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  i18n.inputMethod.type.enabled = true;
-  i18n.inputMethod.ibus.engines = with pkgs.ibus-engines; [ libpinyin ];
+  i18n.extraLocales = [ "zh_CN.UTF-8/UTF-8" ];
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5.addons = with pkgs; [
+      fcitx5-gtk
+      fcitx5-chinese-addons
+      fcitx5-nord
+    ];
+  };
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
@@ -143,10 +151,12 @@
     curl
     btop
     fastfetch
+    wl-gammactl
   ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.hack
+    noto-fonts-cjk-sans
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

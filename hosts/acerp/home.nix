@@ -35,6 +35,7 @@ in
     hyprpaper # wallpaper
     mako # notifications
     rofi-wayland # app launcher
+    hyprshot # screenshot
     networkmanagerapplet
 
     # Development tools
@@ -108,7 +109,7 @@ in
   #  /etc/profiles/per-user/kzrob/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    HYPRSHOT_DIR = "~/Pictures/screenshots";
   };
 
   # Let Home Manager install and manage itself.
