@@ -1,5 +1,5 @@
 {
-  description = "Nixos config flake";
+  description = "NixOS flake configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -15,7 +15,33 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... } @inputs: {
+  outputs = { nixpkgs, home-manager, ... } @inputs: {
+    let
+      # Credit https://github.com/notusknot/dotfiles-nix/blob/main/flake.nix
+      newSystem = hostname: system: pkgs:
+        pkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          system = system;
+          modules = [
+            ./hosts + "/${hostname}/configuration.nix"
+            ./hosts + "/${hostname}/hardware-configuration.nix"
+            home-manager.nixosModules.home-manager
+            {
+              networking.hostName = hostname;
+              home-manager = {
+                extraSpecialArgs = { inherit inputs; };
+                useUserPackages = true;
+                useGlobalPkgs = true;
+                users.kzrob = ./hosts + "/${hostname}/home.nix";
+              };
+            }
+          ];
+        };
+    in {
+      acerp = newSystem "acerp" "x86_64-linux" inputs.nixpkgs;
+    };
+
+    /*
     nixpkgs.config.allowUnfree = true;
 
     # change to nixosConfigurations.HOSTNAME
@@ -24,8 +50,9 @@
       system = "x86_64-linux";
       modules = [
         ./hosts/acerp/configuration.nix
-        inputs.home-manager.nixosModules.default
+        home-manager.nixosModules.default
       ];
     };
-  };
+    */
+  }
 }

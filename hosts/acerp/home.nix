@@ -24,19 +24,9 @@ in
     wineWowPackages.stable
     bottles
 
-    # Hyprland System
-    (waybar.overrideAttrs (oldAttrs: {
-      mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-    }))
-    libnotify
+    # zsh
     zsh
     oh-my-zsh
-    kitty # terminal
-    hyprpaper # wallpaper
-    mako # notifications
-    rofi-wayland # app launcher
-    hyprshot # screenshot
-    networkmanagerapplet
 
     # Development tools
     # vscode-fhs TODO: WHY THE FUCK IS THIS MARKED UNFREE!?
