@@ -15,6 +15,17 @@ in
   home.homeDirectory = "/home/kzrob";
   home.stateVersion = "25.05";
   home.packages = with pkgs; [
+    # HYPRLAND
+    hyprland #compositor
+    hyprpaper #wallpaper
+    hyprshot #screenshot
+    waybar #taskbar
+    dunst #notifications
+    rofi-wayland #start menu
+
+    # HYPRLAND UTILS
+    networkmanagerapplet
+
     # Office and graphics
     libreoffice
     gimp
@@ -29,7 +40,7 @@ in
     oh-my-zsh
 
     # Development tools
-    # vscode-fhs TODO: WHY THE FUCK IS THIS MARKED UNFREE!?
+    vscode-fhs
     arduino-ide
 
     # Learning
@@ -67,19 +78,12 @@ in
     };
   };
 
-  # Home Manager is pretty good at managing dotfiles.
-  # The primary way to manage plain files is through 'home.file'.
   home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
+    ".config/hypr/hyprland.conf".source = ./../../dots/hypr/hyprland.conf;
+    ".config/hypr/hyprpaper.conf".source = ./../../dots/hypr/hyprpaper.conf;
+    
+    ".config/waybar/config.jsonc".source = ./../../dots/waybar/config.jsonc;
+    ".config/waybar/style.css".source = ./../../dots/waybar/style.css;
   };
 
   # Home Manager can also manage your environment variables through

@@ -1,6 +1,103 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, system, ... }:
 
 {
+  # PACKAGES AND VARIABLES
+  users.users.kzrob = {
+    isNormalUser = true;
+    extraGroups = [ "networkmanager" "wheel" "input" ];
+    shell = pkgs.zsh;
+  };
+
+  environment.systemPackages = with pkgs; [
+    # Hyprland
+    hyprland #compositor
+    hyprpaper #wallpaper
+    hyprshot #screenshot
+    waybar #taskbar
+    dunst #notifications
+    rofi-wayland #start menu
+    networkmanagerapplet
+
+    # Editor/IDE
+    vim
+    neovim
+    kdePackages.kate
+    vscode-fhs
+    arduino-ide
+
+    # Z-shell
+    zsh
+    oh-my-zsh
+
+    # CLI Utilities
+    wget
+    curl
+    git
+    btop
+    fastfetch
+    wl-gammactl
+
+    # Office
+    inputs.zen-browser.packages.x86_64-linux.twilight
+    libreoffice
+    gimp
+    blender
+
+    # Compatibility
+    wineWowPackages.stable
+    bottles
+
+    # Media
+    mpv
+    obs-studio
+
+    # Learning
+    anki
+  ];
+
+  environment.variables = {
+    XDG_CONFIG_HOME = "~/nixos/dots";
+    HYPRLAND_CONFIG_PATH = "~/nixos/dots/hypr";
+
+    HYPRSHOT_DIR = "~/Pictures/screenshots";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.hack
+    noto-fonts-cjk-sans
+  ];
+
+  # PROGRAM CONFIGS
+  programs.hyprland.enable = true;
+  programs.firefox.enable = true;
+  programs.steam.enable = true;
+
+  programs.zsh = {
+    enable = true;
+    oh-my-zsh = {
+      enable = true;
+      theme = "bureau";
+    };
+  };
+
+  programs.git.config = {
+    enable = true;
+    userName = "kzrob";
+    userEmail = "davidyo571@gmail.com";
+  };
+/*
+  inputs.zen-browser.packages."${system}".twilight.override = {
+    enable = true;
+    policies = {
+      DisableAppUpdate = true;
+      DisableTelemetry = true;
+    };
+  };
+*/
+
+  # SYSTEM
   nixpkgs.config.allowUnfree = true;
 
   nix = {
@@ -9,7 +106,7 @@
   };
 
   boot = {
-    cleanTmpDir = true;
+    tmp.cleanOnBoot = true;
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
   };
@@ -19,15 +116,8 @@
     size = 16 * 1024;
   }];
 
-  users.users.kzrob = {
-    isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" "input" ];
-  };
-
   networking = {
     networkmanager.enable = true;
-    wireless.enable = true;  # enables wpa_supplicant
-    wireless.iwd.enable = true;
     firewall = {
       enable = true;
       allowedTCPPorts = [ 443 80 22 ];
@@ -51,21 +141,6 @@
     };
   };
 
-  # Wayland
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-      xdg-desktop-portal-wlr
-    ];
-    gtkUsePortal = true;
-  };
-
-  fonts.packages = with pkgs; [
-    nerd-fonts.hack
-    noto-fonts-cjk-sans
-  ];
-
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
@@ -84,34 +159,22 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    media-session.enable = true;
+  };
+
+  # Wayland
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-wlr
+    ];
   };
 
   # Hyprland
-  programs.hyprland.enable = true;
-
   hardware = {
     graphics.enable = true;
     nvidia.modesetting.enable = true;
   };
-
-  environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
-    NIXOS_OZONE_WL = "1";
-  };
-
-  # Install programs.
-  programs.firefox.enable = true;
-  programs.steam.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    curl
-    btop
-    fastfetch
-    wl-gammactl
-  ];
 
   # read ($man configuration.nix) or https://nixos.org/nixos/options.html
   system.stateVersion = "24.11";
